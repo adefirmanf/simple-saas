@@ -19,6 +19,23 @@ Quick reference guide with all architecture diagrams in Mermaid format:
 - Data Flow
 - Feature Roadmap
 
+### [SUMMARY.md](./SUMMARY.md)
+Complete summary of all documentation with statistics and use cases:
+- Documentation file overview
+- Complete diagram list with descriptions
+- Use cases (Portfolio, Interviews, Presentations)
+- Diagram rendering instructions
+- Key highlights for hiring managers
+
+### [PORTFOLIO_GUIDE.md](./PORTFOLIO_GUIDE.md)
+Step-by-step guide for presenting this project in portfolio:
+- Elevator pitch and key selling points
+- Screenshots and demo flow suggestions
+- Upwork profile templates
+- Interview talking points
+- Resume entry templates
+- Email templates for sharing
+
 ### Main Project Documentation
 - [ARCHITECTURE.md](../ARCHITECTURE.md) - Complete architecture design documentation with detailed explanations
 
