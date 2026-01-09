@@ -81,7 +81,7 @@ export default function Home() {
 
       <footer className="border-t py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          © 2024 LinkShort. All rights reserved.
+          © {new Date().getFullYear()} LinkShort. All rights reserved.
         </div>
       </footer>
     </div>

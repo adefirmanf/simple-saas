@@ -2,10 +2,16 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { Link as LinkIcon, MousePointerClick } from "lucide-react"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
 export default async function DashboardPage() {
   const session = await auth()
-  const userId = session!.user!.id as string
+  
+  if (!session?.user?.id) {
+    redirect("/login")
+  }
+  
+  const userId = session.user.id as string
 
   const urls = await prisma.url.findMany({
     where: { userId },
@@ -32,7 +38,7 @@ export default async function DashboardPage() {
       <div>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome back, {session!.user!.name || session!.user!.email}
+          Welcome back, {session.user.name || session.user.email}
         </p>
       </div>
 

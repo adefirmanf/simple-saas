@@ -2,10 +2,16 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { CreateUrlForm } from "./create-url-form"
 import { UrlList } from "./url-list"
+import { redirect } from "next/navigation"
 
 export default async function UrlsPage() {
   const session = await auth()
-  const userId = session!.user!.id as string
+  
+  if (!session?.user?.id) {
+    redirect("/login")
+  }
+  
+  const userId = session.user.id as string
 
   const urls = await prisma.url.findMany({
     where: { userId },
