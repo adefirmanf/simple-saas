@@ -7,12 +7,14 @@ import { useRouter } from "next/navigation"
 export function CreateUrlForm() {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsLoading(true)
     setError(null)
+    setSuccess(false)
 
     const formData = new FormData(event.currentTarget)
 
@@ -23,6 +25,8 @@ export function CreateUrlForm() {
         setError(result.error)
       } else {
         event.currentTarget.reset()
+        setSuccess(true)
+        setTimeout(() => setSuccess(false), 3000)
         router.refresh()
       }
     } catch {
@@ -39,6 +43,11 @@ export function CreateUrlForm() {
         {error && (
           <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
             {error}
+          </div>
+        )}
+        {success && (
+          <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">
+            URL created successfully!
           </div>
         )}
         <div>
