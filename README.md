@@ -78,6 +78,23 @@ The application uses three main models:
 - **Url** - Stores shortened URLs with short codes
 - **Click** - Tracks individual clicks with metadata
 
+## Architecture & Documentation
+
+📐 **[View Complete Architecture Documentation](./ARCHITECTURE.md)**  
+📊 **[View Visual Diagrams](./docs/DIAGRAMS.md)**
+
+Comprehensive architecture diagrams and design documentation including:
+- System architecture overview
+- Database schema (ERD)
+- Authentication & authorization flows
+- URL shortening flow with click tracking
+- Component architecture
+- Technology stack visualization
+- Deployment architecture
+- Security layers
+
+Perfect for understanding the system design or portfolio presentations.
+
 ## Project Structure
 
 ```
@@ -95,8 +112,12 @@ The application uses three main models:
 │   └── utils.ts           # Utility functions
 ├── prisma/
 │   └── schema.prisma      # Database schema
+├── docs/                  # Architecture documentation
+│   ├── README.md          # Documentation guide
+│   └── DIAGRAMS.md        # Visual diagrams
 ├── auth.ts                # NextAuth configuration
-└── middleware.ts          # Route protection
+├── middleware.ts          # Route protection
+└── ARCHITECTURE.md        # Complete architecture docs
 ```
 
 ## Building for Production
