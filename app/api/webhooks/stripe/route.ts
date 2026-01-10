@@ -35,9 +35,17 @@ export async function POST(req: Request) {
       }
 
       // Payment successful
-      const subscription: Stripe.Subscription = await stripe.subscriptions.retrieve(
+      const subscription = await stripe.subscriptions.retrieve(
         session.subscription as string
       )
+
+      // Get period end from the first subscription item
+      const periodEnd = subscription.items.data[0]?.current_period_end
+
+      if (!periodEnd) {
+        console.error("No current_period_end found on subscription item")
+        break
+      }
 
       // Update user with subscription info
       await prisma.user.update({
@@ -47,9 +55,7 @@ export async function POST(req: Request) {
         data: {
           stripeSubscriptionId: subscription.id,
           stripePriceId: subscription.items.data[0].price.id,
-          stripeCurrentPeriodEnd: new Date(
-            subscription.items.data[0].current_period_end * 1000
-          ),
+          stripeCurrentPeriodEnd: new Date(periodEnd * 1000),
         },
       })
       break
@@ -58,16 +64,25 @@ export async function POST(req: Request) {
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as Stripe.Invoice
       
-      if (!invoice.parent?.subscription_details?.subscription) {
+      // Check if this invoice is related to a subscription
+      const subscriptionId = invoice.parent?.subscription_details?.subscription
+      
+      if (!subscriptionId) {
+        // This might be a one-time payment, not a subscription
         break
       }
 
       // Update subscription period end date
-      const subscription: Stripe.Subscription = await stripe.subscriptions.retrieve(
-        typeof invoice.parent.subscription_details.subscription === 'string'
-          ? invoice.parent.subscription_details.subscription
-          : invoice.parent.subscription_details.subscription.id
+      const subscription = await stripe.subscriptions.retrieve(
+        typeof subscriptionId === 'string' ? subscriptionId : subscriptionId.id
       )
+
+      const periodEnd = subscription.items.data[0]?.current_period_end
+
+      if (!periodEnd) {
+        console.error("No current_period_end found on subscription item")
+        break
+      }
 
       await prisma.user.update({
         where: {
@@ -75,9 +90,7 @@ export async function POST(req: Request) {
         },
         data: {
           stripePriceId: subscription.items.data[0].price.id,
-          stripeCurrentPeriodEnd: new Date(
-            subscription.items.data[0].current_period_end * 1000
-          ),
+          stripeCurrentPeriodEnd: new Date(periodEnd * 1000),
         },
       })
       break
@@ -86,15 +99,20 @@ export async function POST(req: Request) {
     case "customer.subscription.updated": {
       const subscription = event.data.object as Stripe.Subscription
 
+      const periodEnd = subscription.items.data[0]?.current_period_end
+
+      if (!periodEnd) {
+        console.error("No current_period_end found on subscription item")
+        break
+      }
+
       await prisma.user.update({
         where: {
           stripeSubscriptionId: subscription.id,
         },
         data: {
           stripePriceId: subscription.items.data[0].price.id,
-          stripeCurrentPeriodEnd: new Date(
-            subscription.items.data[0].current_period_end * 1000
-          ),
+          stripeCurrentPeriodEnd: new Date(periodEnd * 1000),
         },
       })
       break
