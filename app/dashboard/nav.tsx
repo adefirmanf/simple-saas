@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut } from "next-auth/react"
-import { Link as LinkIcon, LogOut, Home } from "lucide-react"
+import { Link as LinkIcon, LogOut, Home, CreditCard } from "lucide-react"
 
 interface User {
   id?: string
@@ -17,6 +17,7 @@ export function DashboardNav({ user }: { user: User }) {
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/dashboard/urls", label: "My URLs", icon: LinkIcon },
+    { href: "/dashboard/pricing", label: "Pricing", icon: CreditCard },
   ]
 
   return (
