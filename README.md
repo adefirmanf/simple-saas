@@ -1,6 +1,6 @@
 # LinkShort - SaaS URL Shortener
 
-A modern, production-ready URL shortener built with Next.js 14, TypeScript, and Tailwind CSS. Features authentication, a beautiful dashboard, click tracking, and analytics.
+A modern, production-ready URL shortener built with Next.js 14, TypeScript, and Tailwind CSS. Features authentication, a beautiful dashboard, click tracking, analytics, and Stripe-powered subscriptions.
 
 ## Features
 
@@ -10,6 +10,8 @@ A modern, production-ready URL shortener built with Next.js 14, TypeScript, and 
 - 📋 **Copy to Clipboard** - One-click URL copying
 - 📈 **Click Tracking** - Real-time analytics for every link
 - 🗑️ **URL Management** - Easy deletion and organization
+- 💳 **Stripe Payments** - Subscription management with Stripe Checkout
+- 💰 **Pricing Tiers** - Free, Pro, and Business plans
 - 🎨 **Modern UI** - Built with Tailwind CSS and shadcn/ui
 - ⚡ **Server Actions** - Fast, type-safe mutations
 - 🛡️ **Type Safety** - Full TypeScript coverage with Zod validation
@@ -21,6 +23,7 @@ A modern, production-ready URL shortener built with Next.js 14, TypeScript, and 
 - **Styling:** Tailwind CSS
 - **UI Components:** shadcn/ui
 - **Authentication:** NextAuth.js v5
+- **Payments:** Stripe
 - **Database:** SQLite with Prisma ORM
 - **Validation:** Zod
 - **Icons:** Lucide React
@@ -83,20 +86,24 @@ The application uses three main models:
 ```
 ├── app/
 │   ├── (auth)/
-│   │   ├── login/         # Login page
-│   │   └── signup/        # Signup page
-│   ├── dashboard/         # Protected dashboard
-│   │   ├── urls/          # URL management
-│   │   └── page.tsx       # Dashboard home
-│   ├── [shortCode]/       # Dynamic redirect route
-│   └── api/auth/          # NextAuth API routes
+│   │   ├── login/              # Login page
+│   │   └── signup/             # Signup page
+│   ├── dashboard/              # Protected dashboard
+│   │   ├── urls/               # URL management
+│   │   ├── pricing/            # Pricing & subscription page
+│   │   └── page.tsx            # Dashboard home
+│   ├── api/
+│   │   ├── auth/               # NextAuth API routes
+│   │   └── webhooks/stripe/    # Stripe webhook handler
+│   └── [shortCode]/            # Dynamic redirect route
 ├── lib/
-│   ├── prisma.ts          # Prisma client
-│   └── utils.ts           # Utility functions
+│   ├── prisma.ts               # Prisma client
+│   ├── stripe.ts               # Stripe configuration
+│   └── utils.ts                # Utility functions
 ├── prisma/
-│   └── schema.prisma      # Database schema
-├── auth.ts                # NextAuth configuration
-└── middleware.ts          # Route protection
+│   └── schema.prisma           # Database schema
+├── auth.ts                     # NextAuth configuration
+└── middleware.ts               # Route protection
 ```
 
 ## Building for Production
@@ -130,6 +137,67 @@ npm start
 - Captures user agent and referrer
 - Real-time click counting
 - Stored with timestamps for analytics
+
+### Payments & Subscriptions (Stripe)
+- Stripe Checkout integration for subscriptions
+- Three pricing tiers: Free, Pro ($9.99/mo), and Business ($29.99/mo)
+- Customer portal for managing subscriptions
+- Webhook handlers for automated subscription updates
+- Sandbox mode for testing with test cards
+
+## Stripe Setup
+
+This application uses Stripe for payment processing in sandbox/test mode.
+
+### 1. Get your Stripe API keys
+
+1. Create a [Stripe account](https://dashboard.stripe.com/register)
+2. Go to [API Keys](https://dashboard.stripe.com/test/apikeys) in test mode
+3. Copy your **Publishable key** and **Secret key**
+
+### 2. Create Stripe Products and Prices
+
+1. Go to [Products](https://dashboard.stripe.com/test/products) in the Stripe Dashboard
+2. Create two products:
+   - **Pro Plan**: Create a recurring price of $9.99/month
+   - **Business Plan**: Create a recurring price of $29.99/month
+3. Copy the Price IDs (they start with `price_`)
+
+### 3. Configure Environment Variables
+
+Update your `.env` file with your Stripe credentials:
+
+```env
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
+STRIPE_PRO_PRICE_ID=price_your_pro_price_id
+STRIPE_BUSINESS_PRICE_ID=price_your_business_price_id
+```
+
+### 4. Set up Stripe Webhooks (for production)
+
+1. Go to [Webhooks](https://dashboard.stripe.com/test/webhooks) in the Stripe Dashboard
+2. Click "Add endpoint"
+3. Enter your webhook URL: `https://yourdomain.com/api/webhooks/stripe`
+4. Select the following events to listen to:
+   - `checkout.session.completed`
+   - `invoice.payment_succeeded`
+   - `customer.subscription.updated`
+   - `customer.subscription.deleted`
+5. Copy the webhook signing secret and add to `.env`:
+   ```env
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+   ```
+
+### 5. Testing Payments
+
+Use Stripe's test card numbers in sandbox mode:
+- Card number: `4242 4242 4242 4242`
+- Expiry: Any future date
+- CVC: Any 3 digits
+- ZIP: Any 5 digits
+
+More test cards: [Stripe Testing Documentation](https://stripe.com/docs/testing)
 
 ## License
 
