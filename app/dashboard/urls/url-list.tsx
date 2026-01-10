@@ -20,7 +20,7 @@ export function UrlList({ urls }: { urls: Url[] }) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const copyToClipboard = async (shortCode: string, id: string) => {
-    const url = `${window.location.origin}/${shortCode}`
+    const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/${shortCode}`
     await navigator.clipboard.writeText(url)
     setCopiedId(id)
     setTimeout(() => setCopiedId(null), 2000)
@@ -50,7 +50,7 @@ export function UrlList({ urls }: { urls: Url[] }) {
               <div className="flex-1 space-y-1">
                 <div className="flex items-center gap-2">
                   <code className="rounded bg-muted px-2 py-1 text-sm font-mono font-medium">
-                    {window.location.origin}/{url.shortCode}
+                    {typeof window !== 'undefined' ? window.location.origin : ''}/{url.shortCode}
                   </code>
                   <button
                     onClick={() => copyToClipboard(url.shortCode, url.id)}
