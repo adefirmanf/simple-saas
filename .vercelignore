@@ -1,0 +1,31 @@
+# Dependencies
+node_modules
+
+# Database files (SQLite - not used in production)
+*.db
+*.db-journal
+dev.db
+prisma/dev.db
+prisma/dev.db-journal
+
+# Environment files
+.env
+.env.local
+.env*.local
+
+# Development files
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+
+# Build outputs (Vercel handles this)
+.next
+
+# TypeScript
+*.tsbuildinfo
