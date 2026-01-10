@@ -8,10 +8,10 @@ This project includes comprehensive architecture documentation suitable for port
 
 ## 📚 Documentation Files
 
-### 1. **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Main Documentation (17KB)
+### 1. **[ARCHITECTURE.md](../ARCHITECTURE.md)** - Main Documentation (20KB)
 **Purpose**: Complete architecture design documentation with detailed explanations  
 **Contents**:
-- 10 comprehensive architecture diagrams
+- 12 comprehensive architecture diagrams
 - Detailed descriptions for each component
 - Security features and best practices
 - Performance optimization strategies
@@ -207,7 +207,7 @@ Copy diagram code and paste to edit/export
 
 ## 📈 Statistics
 
-- **Total Documentation**: 3 files, ~34KB
+- **Total Documentation**: 6 files, ~72KB
 - **Total Diagrams**: 12 diagrams
 - **Diagram Types**: 5 types (Layered, ERD, Sequence, Flow, Graph)
 - **Components Documented**: 40+ components
