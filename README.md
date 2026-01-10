@@ -55,7 +55,10 @@ Edit `.env` and update the following:
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret-key-change-this-in-production
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+DATABASE_URL=postgresql://user:password@localhost:5432/linkshort?schema=public
 ```
+
+For local development, you can use PostgreSQL or modify the Prisma schema to use SQLite.
 
 4. Set up the database:
 ```bash
@@ -105,6 +108,67 @@ The application uses three main models:
 npm run build
 npm start
 ```
+
+## Deploying to Vercel
+
+### Prerequisites
+- A Vercel account (sign up at [vercel.com](https://vercel.com))
+- A PostgreSQL database (recommended: [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres) or [Neon](https://neon.tech))
+
+### Deployment Steps
+
+1. **Push your code to GitHub** (if not already done)
+
+2. **Import the project in Vercel:**
+   - Go to [vercel.com/new](https://vercel.com/new)
+   - Import your GitHub repository
+   - Vercel will auto-detect the Next.js framework
+
+3. **Configure Environment Variables:**
+   Add the following environment variables in Vercel project settings:
+   ```
+   NEXTAUTH_URL=https://your-app.vercel.app
+   NEXTAUTH_SECRET=generate-a-secure-random-string
+   NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+   DATABASE_URL=your-postgresql-connection-string
+   ```
+
+4. **Generate a secure NEXTAUTH_SECRET:**
+   ```bash
+   openssl rand -base64 32
+   ```
+
+5. **Set up your PostgreSQL database:**
+   - If using Vercel Postgres, create a database in your Vercel project
+   - Copy the connection string to `DATABASE_URL`
+   - The format should be: `postgresql://user:password@host:5432/database?schema=public`
+
+6. **Deploy:**
+   - Click "Deploy" in Vercel
+   - Vercel will build and deploy your app
+   - The build process will run migrations automatically
+
+### Post-Deployment
+
+After deployment, you may need to run migrations manually if they didn't run during build:
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Pull environment variables
+vercel env pull
+
+# Run migrations
+npx prisma migrate deploy
+```
+
+### Troubleshooting
+
+- If the build fails, check the Vercel build logs
+- Ensure all environment variables are set correctly
+- Verify your PostgreSQL connection string is correct
+- Check that your database is accessible from Vercel's servers
 
 ## Features in Detail
 
